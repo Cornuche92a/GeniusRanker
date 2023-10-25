@@ -9,10 +9,10 @@ const DefaultPalette = (mode, skin) => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor
     } else if (skin === 'bordered' && mode === 'dark') {
-      return '#2a2c42'
+      return '#30334E'
     } else if (mode === 'light') {
       return '#F7F7F9'
-    } else return '#1d223b'
+    } else return '#282A42'
   }
 
   return {
@@ -34,9 +34,9 @@ const DefaultPalette = (mode, skin) => {
       white: whiteColor
     },
     primary: {
-      light: '#1993ed',
-      main: '#118fed',
-      dark: '#0678cc',
+      light: '#ff734f',
+      main: '#ff6b3f',
+      dark: '#d5522c',
       contrastText: whiteColor
     },
     secondary: {

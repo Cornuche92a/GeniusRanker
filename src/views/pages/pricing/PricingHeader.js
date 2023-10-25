@@ -10,16 +10,21 @@ import Icon from 'src/@core/components/icon'
 
 // ** Custom Component Import
 import CustomChip from 'src/@core/components/mui/chip'
+import {Fragment} from "react";
+import Divider from "@mui/material/Divider";
 
 const PricingHeader = props => {
   // ** Props
-  const { plan, handleChange } = props
+  const { plan, handleChange, hideTexts } = props
 
   // ** Hook
   const hidden = useMediaQuery(theme => theme.breakpoints.down('sm'))
 
   return (
     <Box sx={{ mb: [10, 17.5], textAlign: 'center' }}>
+      {hideTexts && (  <Divider />)}
+      {!hideTexts && (
+      <Fragment>
       <Typography variant='h4'>Pricing Plans</Typography>
       <Box sx={{ mt: 2.5, mb: 10.75 }}>
         <Typography variant='body2'>
@@ -27,6 +32,8 @@ const PricingHeader = props => {
         </Typography>
         <Typography variant='body2'>Choose the best plan to fit your needs.</Typography>
       </Box>
+      </Fragment>
+  )}
       <Box sx={{ display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
         <InputLabel
           htmlFor='pricing-switch'

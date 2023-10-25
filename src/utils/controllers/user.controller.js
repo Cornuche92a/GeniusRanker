@@ -33,20 +33,24 @@ const getUser = async userId => {
   }
 }
 
-const createUser = async (userId, userMetadata, appMetadata) => {
-  const params = { id: userId }
-  const user = await auth0.getUser(params)
+const createUser = async (Auth0UserId, userMetadata, appMetadata) => {
+
+  const user = await auth0.getUser({ id: Auth0UserId })
   const { email, user_metadata } = user
 
   await connectToDatabase()
 
-  if (await User.findOne({ _id: userId })) {
-    throw new Error('User already exists')
+  const userFromDB =  User.findOne({ _id: Auth0UserId })
+
+  console.log( 'userFromDB', userFromDB)
+
+  if (!userFromDB) {
+    throw new Error('User already exists on DB')
   }
 
   try {
 
-    async function getStripeCustomerId(){
+   async function getStripeCustomerId(){
       if(!user_metadata.stripeCustomerId){
         const customer = await stripe.customers.create({
           email: email,
@@ -55,7 +59,7 @@ const createUser = async (userId, userMetadata, appMetadata) => {
           phone: user_metadata.phone_number,
           metadata: {
             // des informations additionnelles que vous pouvez stocker
-            id_utilisateur: userId
+            id_utilisateur: Auth0UserId
           }
         })
 
@@ -67,22 +71,27 @@ const createUser = async (userId, userMetadata, appMetadata) => {
       }
     }
 
+    const StripeId = await getStripeCustomerId()
+
+        console.log('StripeCustomerId',  StripeId)
+
     if (!user_metadata.firstname || !user_metadata.lastname || !user_metadata.stripeCustomerId) {
 
-      userMetadata.stripeCustomerId = await getStripeCustomerId()
+      userMetadata.stripeCustomerId = StripeId
 
-      await auth0.updateUserMetadata({ id: userId }, { ...userMetadata })
-      await auth0.updateAppMetadata({ id: userId }, { ...appMetadata })
+      await auth0.updateUserMetadata({ id: Auth0UserId }, { ...userMetadata })
+      await auth0.updateAppMetadata({ id: Auth0UserId }, { ...appMetadata })
     }
 
     const newUser = new User({
-      _id: userId,
+      _id: Auth0UserId,
       firstname: userMetadata.firstname,
       lastname: userMetadata.lastname,
       email: email,
+        phone_number: user_metadata.phone_number,
       role: appMetadata.role || 'client',
       vip: appMetadata.vip || null,
-      stripeCustomerId: await getStripeCustomerId(),
+      stripeCustomerId: StripeId,
       referralCode: await getNewReferralCode(),
       createdAt: new Date(),
       updatedAt: new Date()
@@ -150,10 +159,14 @@ const deleteUser = async userId => {
     await connectToDatabase()
     const user = await User.findOne({ _id: userId })
     await User.findByIdAndDelete(userId)
-    await stripe.customers.del(user.stripeCustomerId)
+    await stripe.customers.del(user.stripeCustomerId).catch(() => console.log('déjà supprimé'))
+
+    return { status: 200, message: 'success' }
+
   } catch (error) {
     throw new Error(error)
   }
 }
+
 
 module.exports = { getUser, updateUser, createUser, deleteUser }

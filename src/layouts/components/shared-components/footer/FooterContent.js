@@ -24,8 +24,8 @@ const FooterContent = () => {
           ❤️
         </Box>
         {` by `}
-        <LinkStyled target='_blank' href='https://pixinvent.com/'>
-          Pixinvent
+        <LinkStyled target='_blank' href='https://twitter.com/CornucheA'>
+          Cornuche
         </LinkStyled>
       </Typography>
       {hidden ? null : (
@@ -35,12 +35,6 @@ const FooterContent = () => {
           </LinkStyled>
           <LinkStyled target='_blank' href='https://1.envato.market/pixinvent_portfolio'>
             More Themes
-          </LinkStyled>
-          <LinkStyled
-            target='_blank'
-            href='https://demos.pixinvent.com/materialize-nextjs-admin-template/documentation'
-          >
-            Documentation
           </LinkStyled>
           <LinkStyled target='_blank' href='https://pixinvent.ticksy.com/'>
             Support

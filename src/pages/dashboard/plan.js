@@ -1,4 +1,5 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+import getFaqPlans from "../../utils/controllers/faq.controller";
+import getPlansDetails from "../../utils/controllers/plan.controller";
 
 // ** Next Auth
 import { useSession } from 'next-auth/react'
@@ -64,140 +65,16 @@ const Pricing = ({ apiData }) => {
   )
 }
 
+Pricing.authGuard = false
 
 export const getStaticProps = async () => {
 
-  // Product 1
-  const product1 = await stripe.products.retrieve(
-    'prod_OAjYMbpQ7ZuVdk'
-  );
-
-  const price1monthly = await stripe.prices.retrieve(
-    'price_1NOO5jBqdsYRwLDfpCJ9tctk'
-  );
-
-  const price1annualy = await stripe.prices.retrieve(
-    'price_1NOQKbBqdsYRwLDf4FTxqj5p'
-  );
+  let apiData = {};
 
 
-  // Product 2
-  const product2 = await stripe.products.retrieve(
-    'prod_OAjrJl0XT0irmw'
-  );
 
-  const price2monthly = await stripe.prices.retrieve(
-    'price_1NOOO4BqdsYRwLDfvCeOvM1h'
-  );
-
-  const price2annualy = await stripe.prices.retrieve(
-    'price_1NP1xiBqdsYRwLDf5RmWi5hH'
-  );
-
-
-  // Product 3
-  const product3 = await stripe.products.retrieve(
-    'prod_OBOHbNEyZLK99s'
-  );
-
-  const price3monthly = await stripe.prices.retrieve(
-    'price_1NP1UpBqdsYRwLDflTM0xYkO'
-  );
-
-  const price3annualy = await stripe.prices.retrieve(
-    'price_1NP1UpBqdsYRwLDfMlWRP27o'
-  );
-
-  const apiData = {
-    "pricingPlans": [
-      {
-        "imgWidth": 100,
-        "title": product1.name,
-        "imgHeight": 100,
-        "monthlyPrice": price1monthly.unit_amount / 100,
-        "priceId" : price1monthly.id,
-        "currentPlan": false,
-        "popularPlan": false,
-        "subtitle": "A simple start for everyone",
-        "imgSrc": "/images/components/pricing/essential.png",
-        "yearlyPlan": {
-          "priceId" : price1annualy.id,
-          "perMonth": ((price1annualy.unit_amount / 12) / 100).toFixed(0),
-          "totalAnnual": price1annualy.unit_amount / 100
-        },
-        "planBenefits": [
-          "100 responses a month",
-          "Unlimited forms and surveys",
-          "Unlimited fields",
-          "Basic form creation tools",
-          "Up to 2 subdomains"
-        ]
-      },
-      {
-        "imgWidth": 100,
-        "imgHeight": 100,
-        "monthlyPrice": price2monthly.unit_amount / 100,
-        "priceId" : price2monthly.id,
-        "title": product2.name,
-        "popularPlan": true,
-        "currentPlan": false,
-        "subtitle": "For small to medium businesses",
-        "imgSrc": "/images/components/pricing/advanced.png",
-        "yearlyPlan": {
-          "priceId" : price2annualy.id,
-          "perMonth": ((price2annualy.unit_amount_decimal / 12) / 100).toFixed(0),
-          "totalAnnual": price2annualy.unit_amount / 100
-        },
-        "planBenefits": [
-          "Unlimited responses",
-          "Unlimited forms and surveys",
-          "Instagram profile page",
-          "Google Docs integration",
-          "Custom “Thank you” page"
-        ]
-      },
-      {
-        "imgWidth": 100,
-        "imgHeight": 100,
-        "monthlyPrice": price3monthly.unit_amount / 100,
-        "priceId" : price3monthly.id,
-        "popularPlan": false,
-        "currentPlan": false,
-        "title": product3.name,
-        "subtitle": "Solution for big organizations",
-        "imgSrc": "/images/components/pricing/pro.png",
-        "yearlyPlan": {
-          "priceId" : price3annualy.id,
-          "perMonth": ((price3annualy.unit_amount_decimal / 12) / 100).toFixed(0),
-          "totalAnnual": price3annualy.unit_amount / 100
-        },
-        "planBenefits": [
-          "PayPal payments",
-          "Logic Jumps",
-          "File upload with 5GB storage",
-          "Custom domain support",
-          "Stripe integration"
-        ]
-      }
-    ],
-    "faq": [
-      {
-        "id": 1,
-        "question": "What is Lorem Ipsum?",
-        "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-      },
-      {
-        "id": 2,
-        "question": "What is Lorem Ipsum?",
-        "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-      },
-      {
-        "id": 3,
-        "question": "What is Lorem Ipsum?",
-        "answer": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-      },
-    ]
-  }
+  apiData.pricingPlans = await getPlansDetails();
+  apiData.faq = await getFaqPlans();
 
   return {
     props: {
@@ -207,6 +84,5 @@ export const getStaticProps = async () => {
   }
 }
 
-Pricing.authGuard = false
 
 export default Pricing

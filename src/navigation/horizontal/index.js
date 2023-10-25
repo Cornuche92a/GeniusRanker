@@ -48,7 +48,7 @@ const navigation = () => [
     icon: 'mdi:currency-eur',
   },
   {
-    title: 'Mes parrainages',
+    title: 'Affiliation',
     path: '/referral',
     action: 'read',
     subject: 'dashboard',
@@ -56,7 +56,7 @@ const navigation = () => [
     icon: 'mdi:people-outline',
   },
   {
-    title: 'État des services',
+    title: 'États',
     path: '/status',
     action: ['read'],
     subject: 'status',
@@ -64,7 +64,7 @@ const navigation = () => [
     icon: 'mdi:alert-box-outline',
   },
   {
-    title: 'Contactez-nous',
+    title: 'Contact',
     path: '/contact',
     action: 'read',
     subject: 'dashboard',

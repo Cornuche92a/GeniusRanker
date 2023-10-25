@@ -346,7 +346,8 @@ Complete.authGuard = false
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions)
 
-  if (session.user.firstname && session.user.lastname) {
+
+  if (!session || (session.user.firstname && session.user.lastname)) {
     return {
       redirect: {
         destination: '/'

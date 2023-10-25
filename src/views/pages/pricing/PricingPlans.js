@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import PlanDetails from 'src/@core/components/plan-details'
 
 const PricingPlans = props => {
+
   // ** Props
   const { plan, data } = props
 

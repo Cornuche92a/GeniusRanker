@@ -21,6 +21,9 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import CustomChip from 'src/@core/components/mui/chip'
 import Image from "next/image";
 import axios from "axios";
+import {useState} from "react";
+import {Stack} from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
 
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -39,8 +42,15 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 }))
 
 const PlanDetails = props => {
+
+
   // ** Props
   const { plan, data } = props
+
+  // ** States
+  const [spinner, setSpinner] = useState(false)
+
+
 
   // ** Router
   const router = useRouter();
@@ -51,25 +61,47 @@ const PlanDetails = props => {
 
   const handleSubscribe = async () => {
 
+    console.log('data ',data)
+
+    setSpinner(true)
+
+
     if (session) {
       let response;
 
       if(plan === 'monthly') {
-        response = await axios.post('/api/user/subscribe/initiate', {new_plan_id: data.priceId });
+        response = await axios.post('/api/user/subscribe/initiate', {new_plan_id: data.id }).then(
+          data => {
+
+            setSpinner(false)
+
+            return data
+
+          }
+        );
 
       }
       if(plan === 'annually') {
-        response = await axios.post('/api/user/subscribe/initiate', { new_plan_id: data.yearlyPlan.priceId });
+        response = await axios.post('/api/user/subscribe/initiate', { new_plan_id: data.yearlyPlan.id }).then(
+
+          data => {
+
+            setSpinner(false)
+
+            return data
+
+          }
+        );
 
       }
 
       const { url } = response.data;
 
       // Effectuer une redirection côté serveur vers l'URL de paiement de Stripe
-      router.replace(url);
+       await router.replace(url);
 
     } else {
-      signIn('auth0')
+      await signIn('auth0')
     }
   }
 
@@ -150,40 +182,51 @@ const PlanDetails = props => {
       <BoxFeature>{renderFeatures()}</BoxFeature>
 
 
-      { session?.user.vip === data?.title ?
-      <Button
-        fullWidth
-        disabled={true}
-        color={data?.currentPlan ? 'success' : 'primary'}
-        variant={data?.popularPlan ? 'contained' : 'outlined'}
-      >
-        MY PLAN
-      </Button>
+      { spinner ?
 
-      :
 
-        session && (session.user.vip !== null) ?
-      <Button
-        fullWidth
-        onClick={ handleSubscribe}
-        color={data?.currentPlan ? 'success' : 'primary'}
-        variant={data?.popularPlan ? 'contained' : 'outlined'}
-      >
-        {data?.currentPlan ? 'MY PLAN' : 'CHANGE PLAN'}
-      </Button>
+          <Stack sx={{ width: '100%'}}>
+            <LinearProgress color='info' />
+          </Stack>
+     :
 
-          :
-
+         session?.user.vip === data?.title ?
           <Button
             fullWidth
-            onClick={ handleSubscribe}
+            disabled={true}
             color={data?.currentPlan ? 'success' : 'primary'}
             variant={data?.popularPlan ? 'contained' : 'outlined'}
           >
-            {session?.user?.trialused ? 'START PLAN' : 'START 7-DAYS FREE TRIAL'}
+            MY PLAN
           </Button>
 
+          :
+
+          session && (session.user.vip !== null) ?
+            <Button
+              fullWidth
+              onClick={ handleSubscribe}
+              color={data?.currentPlan ? 'success' : 'primary'}
+              variant={data?.popularPlan ? 'contained' : 'outlined'}
+            >
+              {data?.currentPlan ? 'MY PLAN' : 'CHANGE PLAN'}
+            </Button>
+
+            :
+
+            <Button
+              fullWidth
+              onClick={ handleSubscribe}
+              color={data?.currentPlan ? 'success' : 'primary'}
+              variant={data?.popularPlan ? 'contained' : 'outlined'}
+            >
+              {session?.user?.trialused ? 'START PLAN' : 'START 7-DAYS FREE TRIAL'}
+            </Button>
+
+
+
       }
+
 
     </BoxWrapper>
   )

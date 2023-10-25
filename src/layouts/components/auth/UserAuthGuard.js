@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react'
 const AuthGuard = props => {
 
   const { children, fallback } = props
-  const {data: status} = useSession()
+  const {data: session, status} = useSession()
   const router = useRouter()
 
   useEffect(

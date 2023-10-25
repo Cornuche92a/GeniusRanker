@@ -18,7 +18,7 @@ const Avatar = styled(CustomAvatar)(({ theme }) => ({
   marginRight: theme.spacing(4)
 }))
 
-const CardStatsHorizontal = props => {
+const SavingDetails = props => {
   // ** Props
   const { title, icon, stats, trendNumber, color = 'primary', trend = 'positive' } = props
 
@@ -49,4 +49,5 @@ const CardStatsHorizontal = props => {
   )
 }
 
-export default CardStatsHorizontal
+
+export default SavingDetails

@@ -26,7 +26,7 @@ const AclGuard = props => {
   const { aclAbilities, children, guestGuard = false, authGuard = true } = props
 
   // ** Hooks
-  const {data: session} = useSession()
+  const {data: session, status} = useSession()
   const router = useRouter()
 
   // ** Vars

@@ -157,5 +157,30 @@ const deleteSubscription = async (event) => {
 
 }
 
+const checkSubscription = async (userId) => {
+
+
+  // Se connecter à MongoDB
+  await connectToDatabase()
+
+  try {
+    // Supposons que vous ayez un modèle Mongoose pour les utilisateurs
+    const userRecord = await User.findOne({ _id: userId });
+
+    if (!userRecord) {
+
+      console.log("Utilisateur non trouvé");
+
+    }
+
+    // Vérifiez si l'utilisateur a un abonnement actif
+    return userRecord.subscriptionStatus === "active";
+
+  } catch (error) {
+    throw new Error("Erreur lors de la vérification de l'abonnement");
+  }
+}
+
+
 
 module.exports = { createSubscription, deleteSubscription, updateSubscription }

@@ -6,6 +6,7 @@ import { createUser } from 'src/utils/controllers/user.controller'
 const yup = require('yup')
 
 export default async function handler(req, res) {
+
   await csrf(req, res).catch(err => {
     res.status(401).json({ message: 'Unauthorized : ' + err })
   })

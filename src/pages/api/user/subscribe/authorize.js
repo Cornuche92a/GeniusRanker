@@ -3,6 +3,7 @@
 import { buffer } from 'micro'
 import Stripe from 'stripe'
 import {createSubscription, deleteSubscription, updateSubscription} from 'src/utils/controllers/subscribe.controller'
+import {getUser, deleteUser} from "src/utils/controllers/user.controller";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
@@ -56,9 +57,21 @@ const webhookHandler = async (req, res) => {
         await createSubscription(event.data.object).then(
           data => {
             res.status(data.status)
+
           }
         )
 
+        break
+
+      case 'customer.deleted' :
+
+        const userId = event.data.object.metadata.id_utilisateur
+
+        await deleteUser(userId).then(
+            data => {
+              res.status(data.status)
+            }
+        )
         break
 
       // Ajouter d'autres cas pour d'autres types d'événements Stripe

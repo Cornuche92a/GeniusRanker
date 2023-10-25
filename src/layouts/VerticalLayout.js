@@ -16,7 +16,7 @@ import themeConfig from 'src/configs/themeConfig'
 import AppBar from '../@core/layouts/components/vertical/appBar'
 import Customizer from 'src/@core/components/customizer'
 import Navigation from '../@core/layouts/components/vertical/navigation'
-import Footer from '../@core/layouts/components/shared-components/footer'
+import Footer from '../layouts/components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
 
 const VerticalLayoutWrapper = styled('div')({

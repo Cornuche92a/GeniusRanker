@@ -36,8 +36,8 @@ const AppBrandHorizontal = () => {
 
 const AppBrandVertical = () => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Image src={Logo} alt='logo RankerGenius' loading={'lazy'} width='115' height='35' />
+    <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: '-8px' }}>
+      <Image src={Logo} alt='logo RankerGenius' loading={'lazy'} width='250' height='35' />
     </Box>
   )
 }

@@ -20,6 +20,8 @@ export default async function handler(req, res) {
   const customer_id = user.user_metadata.stripeCustomerId
   const trialused = user.app_metadata.trialused
 
+  console.log('user ',customer_id)
+
   try {
     // Vérifier si l'utilisateur a un abonnement existant dans Stripe
     const subscriptions = await stripe.subscriptions.list({ customer: customer_id });
@@ -54,6 +56,7 @@ export default async function handler(req, res) {
       success_url: process.env.URL+'/pricing', // URL de succès de paiement
       cancel_url: process.env.URL+'/pricing', // URL d'annulation de paiement
     });
+
 
     // Rediriger vers la page de paiement de Stripe
 
